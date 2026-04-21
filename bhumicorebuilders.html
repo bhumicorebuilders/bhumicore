@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BhumicoreBuilders – Architecture · Construction · Interiors · Renovation</title>
+  <meta name="description" content="Bhumicore Builders is a Kerala-based construction company offering architecture, construction, interiors, and renovation services across Kerala.">
+  <meta name="keywords" content="construction company Kerala, home builders Kerala, interior design Kerala, builders Kerala">
+  <meta property="og:title" content="Bhumicore Builders Kerala">
+  <meta property="og:description" content="Kerala-based construction company delivering architecture, construction, and interiors across the state.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #080806;
+      --bg2: #101010;
+      --bg3: #181714;
+      --gold: #C8A44A;
+      --gold-light: #E2C47A;
+      --gold-dim: #7A6228;
+      --cream: #F4EDE0;
+      --text: #D8CFBE;
+      --muted: #6E6858;
+      --border: #2A2820;
+      --white: #FDFAF4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ---- NOISE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9997;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+      height: 72px;
+      background: rgba(8,8,6,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    nav.scrolled { background: rgba(8,8,6,0.97); }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--cream);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    .nav-links a:hover,
+    .nav-links a:focus { color: var(--gold); outline: none; }
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.4rem;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      text-decoration: none;
+    }
+    .nav-cta:hover, .nav-cta:focus { background: var(--gold); color: var(--bg); outline: none; }
+
+    /* ---- HAMBURGER ---- */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      z-index: 200;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--cream);
+      transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s;
+    }
+    .nav-hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .nav-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ---- MOBILE MENU ---- */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 72px; left: 0; right: 0;
+      height: auto;                      /* override nav { height: 72px } */
+      background: #080806 !important;    /* override nav { background: rgba(...) } */
+      backdrop-filter: none !important;  /* override nav { backdrop-filter: blur(14px) } */
+      -webkit-backdrop-filter: none !important;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      z-index: 9999;
+      padding: 1.5rem 5vw 2rem;
+      flex-direction: column;
+      gap: 0;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      display: block;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .mobile-menu a:hover, .mobile-menu a:focus { color: var(--gold); outline: none; }
+    .mobile-menu .mobile-cta {
+      margin-top: 1.5rem;
+      display: block;
+      text-align: center;
+      background: var(--gold);
+      color: var(--bg);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ---- HERO ---- */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 680px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 5vw 8vh;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(160deg, transparent 40%, rgba(200,164,74,0.06) 100%),
+        linear-gradient(to bottom, rgba(8,8,6,0.3) 0%, rgba(8,8,6,0.7) 60%, rgba(8,8,6,0.98) 100%);
+      z-index: 1;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hero-grid svg {
+      position: absolute;
+      width: 100%; height: 100%;
+      opacity: 0.07;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 900px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block; width: 32px; height: 1px;
+      background: var(--gold);
+    }
+    h1.hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 9vw, 8.5rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      margin-bottom: 2.2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+    h1.hero-title em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 300;
+    }
+    .hero-sub {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      max-width: 460px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.7s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover, .btn-primary:focus { background: var(--gold-light); transform: translateY(-2px); outline: none; }
+    .btn-ghost {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.6rem;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    .btn-ghost:hover, .btn-ghost:focus { color: var(--gold); outline: none; }
+    .btn-ghost svg { transition: transform 0.3s; }
+    .btn-ghost:hover svg { transform: translateX(4px); }
+
+    /* hero scroll indicator */
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; right: 5vw;
+      z-index: 2;
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s forwards;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      display: block;
+    }
+
+    /* stats strip */
+    .stats-strip {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      overflow: hidden;
+    }
+    .stat {
+      padding: 2.4rem 4vw;
+      border-right: 1px solid var(--border);
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: rgba(200,164,74,0.04); }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    /* ---- SECTION COMMONS ---- */
+    section { padding: 8rem 5vw; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .section-tag::before {
+      content: ''; display: block;
+      width: 28px; height: 1px;
+      background: var(--gold);
+    }
+    h2.section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      margin-bottom: 1.4rem;
+    }
+    h2.section-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .section-desc {
+      font-size: 0.92rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 480px;
+    }
+
+    /* ---- SERVICES ---- */
+    #services { background: var(--bg2); }
+    .services-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 5rem;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .service-card {
+      background: var(--bg2);
+      padding: 3.5rem 3rem;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: background 0.4s;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--gold);
+      transition: width 0.5s ease;
+    }
+    .service-card:hover::before { width: 100%; }
+    .service-card:hover { background: var(--bg3); }
+    .service-icon {
+      width: 52px; height: 52px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2rem;
+      transition: border-color 0.3s;
+    }
+    .service-card:hover .service-icon { border-color: var(--gold-dim); }
+    .service-num {
+      position: absolute;
+      top: 2rem; right: 2.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      font-weight: 300;
+      color: var(--border);
+      line-height: 1;
+      transition: color 0.4s;
+    }
+    .service-card:hover .service-num { color: rgba(200,164,74,0.07); }
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.01em;
+    }
+    .service-text {
+      font-size: 0.85rem;
+      line-height: 1.85;
+      color: var(--muted);
+    }
+    .service-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-top: 1.8rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      text-decoration: none;
+      transition: color 0.3s, gap 0.3s;
+      cursor: pointer;
+    }
+    .service-link:hover, .service-link:focus { color: var(--gold); gap: 0.8rem; outline: none; }
+
+    /* ---- ABOUT ---- */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8vw;
+      align-items: center;
+    }
+    .about-visual { position: relative; }
+    .about-img-wrap {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-img-wrap svg {
+      width: 55%;
+      opacity: 0.12;
+    }
+    .about-badge {
+      position: absolute;
+      bottom: -1.5rem; right: -1.5rem;
+      width: 130px; height: 130px;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+    }
+    .about-badge span:first-child {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--bg);
+      line-height: 1;
+    }
+    .about-badge span:last-child {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(8,8,6,0.7);
+    }
+    .about-content .section-desc { max-width: 100%; }
+    .owner-card {
+      margin-top: 3rem;
+      padding: 2rem;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .owner-avatar {
+      width: 60px; height: 60px;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--bg);
+      flex-shrink: 0;
+    }
+    .owner-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--cream);
+    }
+    .owner-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-top: 0.2rem;
+    }
+
+    /* ---- WHY US ---- */
+    #why { background: var(--bg2); }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+    .why-item {
+      background: var(--bg2);
+      padding: 3rem 2.5rem;
+      transition: background 0.3s;
+    }
+    .why-item:hover { background: var(--bg3); }
+    .why-icon {
+      margin-bottom: 1.5rem;
+      color: var(--gold);
+    }
+    .why-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.6rem;
+    }
+    .why-text { font-size: 0.83rem; line-height: 1.8; color: var(--muted); }
+
+    /* ---- PROCESS ---- */
+    #process { overflow: hidden; }
+    .process-header { margin-bottom: 5rem; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(5,1fr);
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 2rem; left: calc(10% + 1rem); right: calc(10% + 1rem);
+      height: 1px;
+      background: linear-gradient(to right, var(--gold-dim), var(--gold), var(--gold-dim));
+    }
+    .process-step { text-align: center; padding: 0 1rem; }
+    .step-dot {
+      width: 4rem; height: 4rem;
+      border: 1px solid var(--gold-dim);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+      background: var(--bg);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--gold);
+      position: relative; z-index: 1;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .process-step:hover .step-dot { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+    .step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+    .step-text { font-size: 0.78rem; line-height: 1.75; color: var(--muted); }
+
+    /* ---- PROJECTS ---- */
+    #projects { background: var(--bg); }
+    .projects-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 4rem;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg3);
+      cursor: default;
+    }
+    .project-thumb {
+      aspect-ratio: 4/3;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Placeholder gradient backgrounds – replace with real <img> tags */
+    .project-thumb.p1 { background: linear-gradient(135deg, #1a1610 0%, #2a2218 50%, #1a1610 100%); }
+    .project-thumb.p2 { background: linear-gradient(135deg, #141210 0%, #201c14 50%, #141210 100%); }
+    .project-thumb.p3 { background: linear-gradient(135deg, #181412 0%, #241e14 50%, #181412 100%); }
+    .project-thumb.p4 { background: linear-gradient(135deg, #161412 0%, #221a12 50%, #161412 100%); }
+    .project-thumb.p5 { background: linear-gradient(135deg, #1c1810 0%, #282012 50%, #1c1810 100%); }
+    .project-thumb.p6 { background: linear-gradient(135deg, #101010 0%, #1c1810 50%, #101010 100%); }
+    .project-thumb-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      opacity: 0.25;
+    }
+    .project-thumb-label svg { color: var(--gold); }
+    .project-thumb-label span {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(8,8,6,0.92) 0%, rgba(8,8,6,0.2) 60%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.8rem;
+    }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .project-info { transform: translateY(10px); transition: transform 0.4s ease; }
+    .project-card:hover .project-info { transform: translateY(0); }
+    .project-type {
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+    .project-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--cream);
+    }
+    .project-loc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ---- TESTIMONIALS ---- */
+    #testimonials { background: var(--bg2); }
+    .testimonials-header { margin-bottom: 4rem; }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .testimonial-card {
+      background: var(--bg2);
+      padding: 3rem 2.5rem;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .testimonial-card:hover { background: var(--bg3); }
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 0.6;
+      margin-bottom: 1.5rem;
+      opacity: 0.4;
+    }
+    .testimonial-text {
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--text);
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .testimonial-avatar {
+      width: 44px; height: 44px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--cream);
+    }
+    .testimonial-role {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .testimonial-stars {
+      display: flex; gap: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .testimonial-stars svg { color: var(--gold); }
+
+    /* ---- CTA BAND ---- */
+    #cta-band {
+      background: var(--gold);
+      padding: 5rem 5vw;
+      text-align: center;
+    }
+    .cta-band-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(8,8,6,0.6);
+      margin-bottom: 1rem;
+    }
+    .cta-band-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 300;
+      color: var(--bg);
+      margin-bottom: 0.8rem;
+      line-height: 1.1;
+    }
+    .cta-band-sub {
+      font-size: 0.88rem;
+      color: rgba(8,8,6,0.65);
+      letter-spacing: 0.06em;
+      margin-bottom: 2.5rem;
+    }
+    .cta-band-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-dark {
+      background: var(--bg);
+      color: var(--gold);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-dark:hover, .btn-dark:focus { background: var(--bg3); transform: translateY(-2px); outline: none; }
+    .btn-outline-dark {
+      background: transparent;
+      color: var(--bg);
+      border: 1px solid rgba(8,8,6,0.3);
+      padding: 0.9rem 2.2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-outline-dark:hover, .btn-outline-dark:focus { background: rgba(8,8,6,0.1); outline: none; }
+
+    /* ---- CONTACT ---- */
+    #contact {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+    }
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8vw;
+      align-items: start;
+    }
+    .contact-info { margin-top: 3rem; display: flex; flex-direction: column; gap: 2rem; }
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 1.2rem;
+    }
+    .contact-ico {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+    }
+    .contact-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .contact-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--cream);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .contact-value:hover { color: var(--gold); }
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.45rem; }
+    .form-field label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      padding: 0.85rem 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      cursor: text;
+      appearance: none;
+    }
+    .form-field select { cursor: pointer; }
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus { border-color: var(--gold-dim); }
+    .form-field textarea { resize: vertical; min-height: 110px; }
+    .form-field select option { background: var(--bg2); }
+    .btn-submit {
+      background: var(--gold);
+      border: none;
+      color: var(--bg);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      align-self: flex-start;
+    }
+    .btn-submit:hover, .btn-submit:focus { background: var(--gold-light); transform: translateY(-2px); outline: none; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 3rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-copy {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer-socials { display: flex; gap: 1rem; }
+    .social-link {
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s, border-color 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+    .social-link:hover, .social-link:focus { color: var(--gold); border-color: var(--gold-dim); background: rgba(200,164,74,0.05); outline: none; }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* gold line accent on hero */
+    .gold-line {
+      position: absolute;
+      top: 0; right: 18%;
+      width: 1px; height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim) 40%, transparent);
+      opacity: 0.25;
+      z-index: 1;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      .services-header { grid-template-columns: 1fr; gap: 1rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      #about { grid-template-columns: 1fr; }
+      .about-badge { right: 1rem; }
+      .why-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr; gap: 2rem; }
+      .process-steps::before { display: none; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); }
+      .projects-header { grid-template-columns: 1fr; gap: 1rem; }
+      .projects-grid { grid-template-columns: repeat(2,1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+
+      /* Hide desktop nav links & CTA, show hamburger */
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav" aria-label="Main navigation">
+    <a href="#hero" class="nav-logo" aria-label="BhumicoreBuilders Home">Bhumicore<span>Builders</span></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get Free Estimate</a>
+    <button class="nav-hamburger" id="hamburger-btn" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="mobile-cta">Get Free Estimate →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Hero">
+    <div class="hero-grid" aria-hidden="true">
+      <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#C8A44A" stroke-width="0.5"/>
+          </pattern>
+          <pattern id="grid-small" width="12" height="12" patternUnits="userSpaceOnUse">
+            <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#C8A44A" stroke-width="0.2"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-small)"/>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+        <line x1="200" y1="100" x2="900" y2="100" stroke="#C8A44A" stroke-width="0.8"/>
+        <line x1="200" y1="100" x2="200" y2="750" stroke="#C8A44A" stroke-width="0.8"/>
+        <line x1="200" y1="750" x2="900" y2="750" stroke="#C8A44A" stroke-width="0.8"/>
+        <line x1="900" y1="100" x2="900" y2="750" stroke="#C8A44A" stroke-width="0.8"/>
+        <line x1="200" y1="300" x2="900" y2="300" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="200" y1="500" x2="900" y2="500" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="400" y1="100" x2="400" y2="750" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="600" y1="100" x2="600" y2="750" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="800" y1="100" x2="800" y2="750" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="200" y1="100" x2="550" y2="10" stroke="#C8A44A" stroke-width="1"/>
+        <line x1="900" y1="100" x2="550" y2="10" stroke="#C8A44A" stroke-width="1"/>
+        <line x1="200" y1="800" x2="900" y2="800" stroke="#C8A44A" stroke-width="0.5"/>
+        <line x1="200" y1="790" x2="200" y2="810" stroke="#C8A44A" stroke-width="0.8"/>
+        <line x1="900" y1="790" x2="900" y2="810" stroke="#C8A44A" stroke-width="0.8"/>
+        <text x="1000" y="200" font-size="10" fill="#C8A44A" font-family="monospace">ELEVATION - FRONT VIEW</text>
+        <text x="1000" y="220" font-size="8" fill="#C8A44A" font-family="monospace">SCALE 1:100</text>
+      </svg>
+    </div>
+    <div class="hero-bg"></div>
+    <div class="gold-line" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-tag" aria-label="Tagline">Building Dreams Into Reality</div>
+      <h1 class="hero-title">We Build<br><em>Extraordinary</em><br>Spaces</h1>
+      <p class="hero-sub">From architectural vision to interior perfection — BhumicoreBuilders transforms ideas into enduring structures across Kerala.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Get Free Estimate</a>
+        <a href="#services" class="btn-ghost">
+          Explore Services
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">Scroll</div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip" aria-label="Company statistics">
+    <div class="stat reveal">
+      <span class="stat-num">150+</span>
+      <span class="stat-label">Projects Completed</span>
+    </div>
+    <div class="stat reveal">
+      <span class="stat-num">20+</span>
+      <span class="stat-label">Years of Excellence</span>
+    </div>
+    <div class="stat reveal">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Client Satisfaction</span>
+    </div>
+    <div class="stat reveal">
+      <span class="stat-num">4</span>
+      <span class="stat-label">Core Services</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services" aria-label="Our Services">
+    <div class="services-header reveal">
+      <div>
+        <div class="section-tag">What We Do</div>
+        <h2 class="section-title">Our Core<br><em>Services</em></h2>
+      </div>
+      <p class="section-desc">We handle every phase of your build — from the first sketch to the final finish — with uncompromising quality and precision.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num" aria-hidden="true">01</div>
+        <div class="service-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8A44A" stroke-width="1.2">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>
+          </svg>
+        </div>
+        <h3 class="service-title">Architecture</h3>
+        <p class="service-text">Innovative architectural designs that balance aesthetics with functionality. From residential homes to commercial buildings, we craft spaces that inspire and endure.</p>
+        <a href="#contact" class="service-link">
+          Book a Consultation
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1"/></svg>
+        </a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num" aria-hidden="true">02</div>
+        <div class="service-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8A44A" stroke-width="1.2">
+            <rect x="2" y="7" width="20" height="14" rx="0"/>
+            <path d="M16 7V5a4 4 0 0 0-8 0v2"/>
+            <line x1="12" y1="12" x2="12" y2="16"/>
+          </svg>
+        </div>
+        <h3 class="service-title">Construction</h3>
+        <p class="service-text">End-to-end construction services with premium materials and skilled craftsmen. We deliver on time, on budget, and to the highest structural standards.</p>
+        <a href="#contact" class="service-link">
+          Book Site Visit
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1"/></svg>
+        </a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num" aria-hidden="true">03</div>
+        <div class="service-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8A44A" stroke-width="1.2">
+            <path d="M4 3h16v5H4zM4 10h7v11H4zM15 10h5v4h-5zM15 18h5v3h-5z"/>
+          </svg>
+        </div>
+        <h3 class="service-title">Interiors</h3>
+        <p class="service-text">Transformative interior design that reflects your personality and lifestyle. We curate every detail — from lighting and materials to furniture and finishes.</p>
+        <a href="#contact" class="service-link">
+          Talk to Our Designer
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1"/></svg>
+        </a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num" aria-hidden="true">04</div>
+        <div class="service-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8A44A" stroke-width="1.2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+        </div>
+        <h3 class="service-title">Renovation</h3>
+        <p class="service-text">Breathing new life into existing spaces with thoughtful renovation. We modernise, expand and reimagine your property while preserving its character.</p>
+        <a href="#contact" class="service-link">
+          Get Renovation Quote
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" aria-label="About BhumicoreBuilders">
+    <div class="about-visual reveal">
+      <div class="about-img-wrap" aria-hidden="true">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#C8A44A" stroke-width="0.8">
+          <rect x="20" y="60" width="160" height="120"/>
+          <rect x="40" y="40" width="50" height="20"/>
+          <rect x="110" y="30" width="50" height="30"/>
+          <line x1="20" y1="100" x2="180" y2="100"/>
+          <line x1="20" y1="140" x2="180" y2="140"/>
+          <line x1="60" y1="60" x2="60" y2="180"/>
+          <line x1="100" y1="60" x2="100" y2="180"/>
+          <line x1="140" y1="60" x2="140" y2="180"/>
+          <rect x="75" y="140" width="50" height="40"/>
+          <rect x="30" y="65" width="20" height="25"/>
+          <rect x="60" y="65" width="25" height="25"/>
+          <rect x="115" y="65" width="20" height="25"/>
+          <rect x="145" y="65" width="20" height="25"/>
+          <rect x="30" y="105" width="20" height="25"/>
+          <rect x="60" y="105" width="25" height="25"/>
+          <rect x="115" y="105" width="20" height="25"/>
+          <rect x="145" y="105" width="20" height="25"/>
+          <circle cx="100" cy="20" r="8"/>
+          <line x1="100" y1="28" x2="100" y2="40"/>
+        </svg>
+        <div class="about-badge">
+          <span>20+</span>
+          <span>Years</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-content reveal">
+      <div class="section-tag">About Us</div>
+      <h2 class="section-title">Crafting Spaces<br>With <em>Passion</em></h2>
+      <p class="section-desc" style="margin-bottom:1.2rem;">BhumicoreBuilders is a trusted name in Kerala's construction landscape. We bring together visionary architecture, meticulous craftsmanship, and deep client understanding to create spaces that stand the test of time.</p>
+      <p class="section-desc">Our team is dedicated to delivering projects that exceed expectations — on time, within budget, and with an unwavering commitment to quality at every stage.</p>
+      <p class="section-desc" style="margin-top:1rem;">Based in Kerala, we deliver architecture, construction, and interior solutions across the state.</p>
+      <div class="owner-card">
+        <div class="owner-avatar" aria-hidden="true">KM</div>
+        <div>
+          <div class="owner-name">Karthik Madhu</div>
+          <div class="owner-title">Founder & Principal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why" aria-label="Why Choose BhumicoreBuilders">
+    <div class="reveal">
+      <div class="section-tag">Why Choose Us</div>
+      <h2 class="section-title">Built on <em>Trust</em>,<br>Delivered with Excellence</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="14" cy="14" r="11"/>
+            <path d="M9 14l3.5 3.5L19 10"/>
+          </svg>
+        </div>
+        <div class="why-title">Quality Materials</div>
+        <p class="why-text">We source only premium, certified materials to ensure structural integrity and lasting beauty in every project we undertake.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="14" cy="14" r="11"/>
+            <path d="M14 8v6l4 2"/>
+          </svg>
+        </div>
+        <div class="why-title">On-Time Delivery</div>
+        <p class="why-text">We respect your timeline. Our disciplined project management ensures milestones are met without compromising on workmanship.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M14 3l2.4 7.2H24l-6.2 4.6 2.4 7.2L14 17.6l-6.2 4.4 2.4-7.2L4 10.2h7.6z"/>
+          </svg>
+        </div>
+        <div class="why-title">Expert Team</div>
+        <p class="why-text">Our in-house architects, engineers, and interior designers collaborate seamlessly to bring coherent and stunning results.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M14 4c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10"/>
+            <path d="M20 4l4 4-4 4M24 8H14"/>
+          </svg>
+        </div>
+        <div class="why-title">End-to-End Service</div>
+        <p class="why-text">From concept to completion, we manage every aspect of your project so you experience a seamless, stress-free journey.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <rect x="4" y="6" width="20" height="16" rx="1"/>
+            <path d="M4 10h20M9 6V4M19 6V4"/>
+          </svg>
+        </div>
+        <div class="why-title">Transparent Pricing</div>
+        <p class="why-text">No hidden costs. We provide detailed estimates and keep you informed throughout, ensuring complete financial clarity.</p>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M22 16.5c0 4.14-3.58 7.5-8 7.5S6 20.64 6 16.5C6 11 14 4 14 4S22 11 22 16.5z"/>
+          </svg>
+        </div>
+        <div class="why-title">Kerala Expertise</div>
+        <p class="why-text">Deep roots in Kerala's climate, culture, and construction norms give us a distinct advantage in designing homes that truly belong here.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" aria-label="Our Projects">
+    <div class="projects-header reveal">
+      <div>
+        <div class="section-tag">Our Work</div>
+        <h2 class="section-title">Featured<br><em>Projects</em></h2>
+      </div>
+      <div>
+        <p class="section-desc">A selection of completed homes, commercial spaces, and interior transformations across Kerala.</p>
+        <a href="#contact" class="btn-primary" style="margin-top:2rem;display:inline-block;">Book a Site Visit</a>
+      </div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-thumb p1">
+          <!-- Replace with: <img src="project1.jpg" alt="Modern Villa in Kochi"> -->
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="8" width="28" height="22" rx="1"/><path d="M4 16l14-8 14 8"/><rect x="14" y="20" width="8" height="10"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Residential · Architecture</div>
+            <div class="project-name">Modern Villa, Kochi</div>
+            <div class="project-loc">Ernakulam, Kerala — 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb p2">
+          <!-- Replace with: <img src="project2.jpg" alt="Luxury Interiors Thrissur"> -->
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="4" width="12" height="18"/><rect x="20" y="4" width="12" height="10"/><rect x="20" y="18" width="12" height="14"/><rect x="4" y="26" width="12" height="6"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Interiors · Luxury</div>
+            <div class="project-name">Heritage Home Interior, Thrissur</div>
+            <div class="project-loc">Thrissur, Kerala — 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb p3">
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="10" width="32" height="20"/><path d="M2 10h32M10 10V6h16v4"/><rect x="12" y="18" width="12" height="12"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Commercial · Construction</div>
+            <div class="project-name">Office Complex, Calicut</div>
+            <div class="project-loc">Kozhikode, Kerala — 2022</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb p4">
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 28V12l14-8 14 8v16"/><rect x="14" y="18" width="8" height="10"/><line x1="4" y1="28" x2="32" y2="28"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Residential · Renovation</div>
+            <div class="project-name">Traditional Home Renewal, Palakkad</div>
+            <div class="project-loc">Palakkad, Kerala — 2024</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb p5">
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="12" width="28" height="20"/><rect x="12" y="4" width="12" height="8"/><line x1="4" y1="20" x2="32" y2="20"/><rect x="8" y="24" width="6" height="8"/><rect x="22" y="24" width="6" height="8"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Architecture · Interior</div>
+            <div class="project-name">Lakeside Retreat, Alappuzha</div>
+            <div class="project-loc">Alappuzha, Kerala — 2024</div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-thumb p6">
+          <div class="project-thumb-label" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1"><rect x="6" y="6" width="24" height="24" rx="2"/><line x1="6" y1="14" x2="30" y2="14"/><line x1="6" y1="22" x2="30" y2="22"/><line x1="14" y1="6" x2="14" y2="30"/><line x1="22" y1="6" x2="22" y2="30"/></svg>
+            <span>Project Image</span>
+          </div>
+        </div>
+        <div class="project-overlay">
+          <div class="project-info">
+            <div class="project-type">Commercial · Interiors</div>
+            <div class="project-name">Boutique Showroom, Trivandrum</div>
+            <div class="project-loc">Thiruvananthapuram, Kerala — 2023</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" aria-label="Client Testimonials">
+    <div class="testimonials-header reveal">
+      <div class="section-tag">Client Stories</div>
+      <h2 class="section-title">What Our Clients<br><em>Say</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+        </div>
+        <div class="testimonial-quote" aria-hidden="true">"</div>
+        <p class="testimonial-text">Karthik and his team turned our dream home into reality. From the initial consultation to the final handover, the process was smooth and completely transparent. The quality of finish exceeded every expectation.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" aria-hidden="true">RN</div>
+          <div>
+            <div class="testimonial-name">Rajesh Nair</div>
+            <div class="testimonial-role">Homeowner · Kochi</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+        </div>
+        <div class="testimonial-quote" aria-hidden="true">"</div>
+        <p class="testimonial-text">We hired BhumicoreBuilders for a full interior renovation of our ancestral home in Thrissur. They beautifully preserved the traditional character while bringing in modern comforts. Truly remarkable work.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" aria-hidden="true">PM</div>
+          <div>
+            <div class="testimonial-name">Priya Menon</div>
+            <div class="testimonial-role">Interior Client · Thrissur</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 9.8l-3.7 2.7 1.4-4.3L1 5.5h4.5z"/></svg>
+        </div>
+        <div class="testimonial-quote" aria-hidden="true">"</div>
+        <p class="testimonial-text">As a business owner, I needed our new office to make a statement. BhumicoreBuilders delivered a space that impresses every client who walks in. On schedule, within budget — genuinely couldn't ask for more.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" aria-hidden="true">AK</div>
+          <div>
+            <div class="testimonial-name">Arjun Kumar</div>
+            <div class="testimonial-role">Business Owner · Calicut</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section id="cta-band" aria-label="Call to Action">
+    <div class="cta-band-tag">Ready to Build?</div>
+    <h2 class="cta-band-title">Your Dream Space<br>Starts With One Call</h2>
+    <p class="cta-band-sub">Free consultation · No obligation · Response within 24 hours</p>
+    <div class="cta-band-actions">
+      <a href="#contact" class="btn-dark">Get Free Estimate</a>
+      <a href="tel:+917736957884" class="btn-outline-dark">Call Us Now</a>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" aria-label="Our Process">
+    <div class="process-header reveal">
+      <div class="section-tag">How We Work</div>
+      <h2 class="section-title">Our <em>Process</em></h2>
+      <p class="section-desc" style="margin-top:0.8rem;">A clear, structured approach ensuring your vision becomes reality without surprise.</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-dot">1</div>
+        <div class="step-title">Consultation</div>
+        <p class="step-text">We listen to your vision, budget, and requirements in a detailed initial meeting.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-dot">2</div>
+        <div class="step-title">Design</div>
+        <p class="step-text">Our architects craft bespoke plans and 3D renders for your approval.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-dot">3</div>
+        <div class="step-title">Planning</div>
+        <p class="step-text">Permits, schedules, material procurement — all handled with precision.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-dot">4</div>
+        <div class="step-title">Construction</div>
+        <p class="step-text">Our skilled crew builds to spec with regular client updates and site visits.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-dot">5</div>
+        <div class="step-title">Handover</div>
+        <p class="step-text">Final inspection, snagging, and a warm handover of your dream space.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" aria-label="Contact Us">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <div class="section-tag">Get In Touch</div>
+        <h2 class="section-title">Let's Build<br><em>Together</em></h2>
+        <p class="section-desc">Ready to start your project? Reach out to us and our team will respond within 24 hours.</p>
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-ico" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M3 5a1 1 0 0 1 1-1h3l1.5 3.5-1.8 1.1A10.5 10.5 0 0 0 11 13.3l1.1-1.8L15.5 13V16a1 1 0 0 1-1 1C7.3 17 3 11.28 3 5z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Phone</div>
+              <a href="tel:+917736957884" class="contact-value">+91 77369 57884</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-ico" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2">
+                <rect x="2" y="2" width="16" height="16" rx="4"/>
+                <circle cx="10" cy="10" r="3.5"/>
+                <circle cx="14.5" cy="5.5" r="0.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Instagram</div>
+              <a href="https://www.instagram.com/__bhumicorebuilders_?igsh=MTAxb3h5MDhqZTlwdA==" target="_blank" rel="noopener noreferrer" class="contact-value">@__bhumicorebuilders_</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-ico" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M10 2C6.69 2 4 4.69 4 8c0 4.5 6 10 6 10S16 12.5 16 8c0-3.31-2.69-6-6-6zm0 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-label">Location</div>
+              <span class="contact-value">Kerala, India</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="contact-form" id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="field-name">Your Name</label>
+              <input type="text" id="field-name" name="name" placeholder="Full Name" autocomplete="name" required/>
+            </div>
+            <div class="form-field">
+              <label for="field-phone">Phone Number</label>
+              <input type="tel" id="field-phone" name="phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel" required/>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="field-email">Email Address</label>
+            <input type="email" id="field-email" name="email" placeholder="you@email.com" autocomplete="email"/>
+          </div>
+          <div class="form-field">
+            <label for="field-service">Service Required</label>
+            <select id="field-service" name="service" aria-label="Select a service">
+              <option value="">Select a Service</option>
+              <option value="Architecture">Architecture</option>
+              <option value="Construction">Construction</option>
+              <option value="Interiors">Interiors</option>
+              <option value="Renovation">Renovation</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="field-details">Project Details</label>
+            <textarea id="field-details" name="details" placeholder="Tell us about your project, budget, and timeline…"></textarea>
+          </div>
+          <button type="button" class="btn-submit" id="btn-submit">Send Enquiry via WhatsApp →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Bhumicore<span>Builders</span></div>
+    <div class="footer-copy">© 2025 BhumicoreBuilders. All rights reserved. · Karthik Madhu</div>
+    <div class="footer-copy" style="margin-top:0.4rem;font-size:0.7rem;letter-spacing:0.16em;color:var(--muted);">Based in Kerala &middot; Serving clients statewide</div>
+    <div class="footer-socials">
+      <a href="tel:+917736957884" class="social-link" aria-label="Call Us">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M2.5 4a1 1 0 0 1 1-1h2.5l1.2 2.8-1.4.86A8.4 8.4 0 0 0 9.34 10.2l.86-1.4L12.98 10v2.5a1 1 0 0 1-1 1C5.84 13.5 2.5 8.52 2.5 4z"/>
+        </svg>
+      </a>
+      <a href="https://www.instagram.com/__bhumicorebuilders_?igsh=MTAxb3h5MDhqZTlwdA==" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="BhumicoreBuilders on Instagram">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <rect x="2" y="2" width="12" height="12" rx="3"/>
+          <circle cx="8" cy="8" r="2.5"/>
+          <circle cx="11.5" cy="4.5" r="0.4" fill="currentColor"/>
+        </svg>
+      </a>
+      <a href="https://wa.me/917736957884" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Chat on WhatsApp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.418A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 0 1-4.078-1.117l-.292-.174-3.035.864.872-2.965-.19-.304A7.96 7.96 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8zm4.406-5.846c-.242-.121-1.43-.706-1.652-.786-.221-.081-.382-.121-.543.121-.16.242-.623.786-.764.947-.14.162-.282.182-.523.061-.242-.121-1.02-.376-1.943-1.198-.718-.64-1.203-1.43-1.344-1.672-.14-.242-.015-.373.106-.493.108-.108.242-.282.363-.423.12-.14.16-.242.242-.403.08-.162.04-.303-.02-.424-.061-.12-.543-1.309-.744-1.793-.196-.471-.395-.407-.543-.414l-.462-.008c-.16 0-.423.06-.644.303-.222.242-.846.826-.846 2.015 0 1.188.866 2.336.987 2.497.12.16 1.704 2.602 4.13 3.648.578.25 1.028.398 1.379.51.58.184 1.107.158 1.524.096.465-.069 1.43-.585 1.632-1.15.2-.564.2-1.048.14-1.149-.061-.1-.222-.162-.463-.282z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // ---- NAV SCROLL ----
+    const mainNav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      mainNav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ---- HAMBURGER MENU ----
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburgerBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close mobile menu when any link inside is clicked
+    mobileMenu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // ---- SCROLL REVEAL ----
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ---- FORM → WHATSAPP ----
+    const submitBtn = document.getElementById('btn-submit');
+    submitBtn.addEventListener('click', () => {
+      const name    = document.getElementById('field-name').value.trim();
+      const phone   = document.getElementById('field-phone').value.trim();
+      const email   = document.getElementById('field-email').value.trim();
+      const service = document.getElementById('field-service').value;
+      const details = document.getElementById('field-details').value.trim();
+
+      if (!name || !phone) {
+        alert('Please enter at least your name and phone number.');
+        return;
+      }
+
+      const msg =
+`*New Enquiry – BhumicoreBuilders*
+
+*Name:* ${name}
+*Phone:* ${phone}
+*Email:* ${email || 'Not provided'}
+*Service:* ${service || 'Not specified'}
+*Details:* ${details || 'Not provided'}`;
+
+      const waURL = 'https://wa.me/917736957884?text=' + encodeURIComponent(msg);
+      window.open(waURL, '_blank');
+
+      submitBtn.textContent = 'Opening WhatsApp ✓';
+      submitBtn.style.background = '#25D366';
+      submitBtn.style.color = '#fff';
+      setTimeout(() => {
+        submitBtn.textContent = 'Send Enquiry via WhatsApp →';
+        submitBtn.style.background = '';
+        submitBtn.style.color = '';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
